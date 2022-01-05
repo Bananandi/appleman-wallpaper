@@ -1,7 +1,3 @@
-# apple_man_pro
-# version 2.0
-# Copyright 2018 Andreas Schadli
-
 from matplotlib import pyplot as plt
 
 # global counter for figures
@@ -10,11 +6,13 @@ FIGURE_NUMBER = 1
 MAX_ITER = 100
 THRESHOLD = 2
 DEFAULT_RESOLUTION = 500
-REPAINT_KEY_DIRECT = 'a'
-REPAINT_KEY_FORMAT = 'b'
-SAVE_KEY = 'c'
+REPAINT_KEY_DIRECT = "a"
+REPAINT_KEY_FORMAT = "b"
+SAVE_KEY = "c"
+# globally set resolution and dpi factor
 DESIRED_WIDTH = 1920
 DESIRED_HEIGHT = 1080
+DPI_FACTOR = 1.5
 
 
 class AppleMan:
@@ -77,23 +75,47 @@ class AppleMan:
         def press(event):
             if event.key == self.repaint_key_direct:
                 new_x_section = ()
-                new_x_section += (ax.get_xlim()[0] / (self.x_diff / self.step) * self.x_diff + self.x_min,)
-                new_x_section += (ax.get_xlim()[1] / (self.x_diff / self.step) * self.x_diff + self.x_min,)
+                new_x_section += (
+                    ax.get_xlim()[0] / (self.x_diff / self.step) * self.x_diff
+                    + self.x_min,
+                )
+                new_x_section += (
+                    ax.get_xlim()[1] / (self.x_diff / self.step) * self.x_diff
+                    + self.x_min,
+                )
                 new_y_section = ()
-                new_y_section += (ax.get_ylim()[1] / (self.y_diff / self.step) * self.y_diff + self.y_min,)
-                new_y_section += (ax.get_ylim()[0] / (self.y_diff / self.step) * self.y_diff + self.y_min,)
+                new_y_section += (
+                    ax.get_ylim()[1] / (self.y_diff / self.step) * self.y_diff
+                    + self.y_min,
+                )
+                new_y_section += (
+                    ax.get_ylim()[0] / (self.y_diff / self.step) * self.y_diff
+                    + self.y_min,
+                )
                 new_apple_man(new_x_section, new_y_section)
             elif event.key == self.repaint_key_format:
+                # Set the desired resolution locally (works just in PyCharm for whatever reason)
                 # width = int(input('Calculate how many points in x direction? '))
                 # height = int(input('Calculate how many points in y direction? '))
+
+                # Take the globally set resolution
                 width = DESIRED_WIDTH
                 height = DESIRED_HEIGHT
-                
+
                 res = (width ** 2 + height ** 2) ** 0.5
-                
-                x_begin = ax.get_xlim()[0] / (self.x_diff / self.step) * self.x_diff + self.x_min
-                x_end = ax.get_xlim()[1] / (self.x_diff / self.step) * self.x_diff + self.x_min
-                y_begin = ax.get_ylim()[1] / (self.y_diff / self.step) * self.y_diff + self.y_min
+
+                x_begin = (
+                    ax.get_xlim()[0] / (self.x_diff / self.step) * self.x_diff
+                    + self.x_min
+                )
+                x_end = (
+                    ax.get_xlim()[1] / (self.x_diff / self.step) * self.x_diff
+                    + self.x_min
+                )
+                y_begin = (
+                    ax.get_ylim()[1] / (self.y_diff / self.step) * self.y_diff
+                    + self.y_min
+                )
                 y_end = y_begin + height / width * abs(x_begin - x_end)
                 new_x_section = ()
                 new_x_section += (x_begin,)
@@ -103,38 +125,64 @@ class AppleMan:
                 new_y_section += (y_end,)
                 new_apple_man(new_x_section, new_y_section, res)
             elif event.key == self.save_key:
-                dpi_factor = float(input('Switch the picture to full screen! '
-                                         'Enter a scaling factor for your screen dpi: '))
-                plt.savefig('Apple Man.png', bbox_inches='tight', pad_inches=0, dpi=fig.dpi * dpi_factor)
+                # Set the desired factor locally (works just in PyCharm for whatever reason)
+                # dpi_factor = float(input('Switch the picture to full screen! '
+                #                          'Enter a scaling factor for your screen dpi: '))
+
+                # Take the globally set dpi factor
+                dpi_factor = DPI_FACTOR
+
+                plt.savefig(
+                    "AppleMan.png",
+                    bbox_inches="tight",
+                    pad_inches=0,
+                    dpi=fig.dpi * dpi_factor,
+                )
+                print("Image saved as AppleMan.png")
 
         # make plot interactive
         fig, ax = plt.subplots()
-        fig.canvas.mpl_connect('key_press_event', press)
-        ax.callbacks.connect('xlim_changed', on_x_change)
-        ax.callbacks.connect('ylim_changed', on_y_change)
+        fig.canvas.mpl_connect("key_press_event", press)
+        ax.callbacks.connect("xlim_changed", on_x_change)
+        ax.callbacks.connect("ylim_changed", on_y_change)
 
         # ax.xaxis.tick_top() TODO neccessary
 
         # color maps: 'seismic', 'hot' or https://matplotlib.org/stable/tutorials/colors/colormaps.html
-        ax.imshow(self.apple_man, cmap='hot')
+        ax.imshow(self.apple_man, cmap="hot")
 
         # makes the image big as possible in the matplotlib frame
-        plt.subplots_adjust(top=1, bottom=0, right=1, left=0,
-                            hspace=0, wspace=0)
-        plt.axis('off')
+        plt.subplots_adjust(top=1, bottom=0, right=1, left=0, hspace=0, wspace=0)
+        plt.axis("off")
 
         plt.show()
 
 
-def new_apple_man(x_section=(-2., 1.), y_section=(-1., 1.), resolution=DEFAULT_RESOLUTION):
+def new_apple_man(
+    x_section=(-2.0, 1.0), y_section=(-1.0, 1.0), resolution=DEFAULT_RESOLUTION
+):
     global FIGURE_NUMBER
-    print('coordinates of figure', FIGURE_NUMBER, '(x_min, x_max), (y_min, y_max):', x_section, y_section)
+    print(
+        "coordinates of figure",
+        FIGURE_NUMBER,
+        "(x_min, x_max), (y_min, y_max):",
+        x_section,
+        y_section,
+    )
+    print("This may take a while ...")
     FIGURE_NUMBER += 1
     a = AppleMan(x_section, y_section, resolution)
     a.paint()
 
 
+# hints
+print(
+    "Repaint with low resolution: a\nRepaint with desired resolution: b\nSave in same folder as AppleMan.png: c\nHint: Switch the picture to full screen before save it\n"
+)
+
 new_apple_man()
+
+# Nice locations:
 # new_apple_man((-0.7182049647852089, -0.6641146512912729), (-0.4882296284289145, -0.4533326519812138))
 # (-0.9140868442109342, -0.9140867984031853), (-0.2793404180229928, -0.27934036831671205)
 # (-0.8406253743030859, -0.8374017862497465), (-0.21486638113274203, -0.21326860270630424)
