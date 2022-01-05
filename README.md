@@ -10,3 +10,11 @@ The apple_man_pro.py script has the following additional functionalities:
 - Save the image: Press "c" and choose a location
 
 Here are some output examples:
+
+![alt text](example0.png)
+
+![alt text](example1.png)
+
+![alt text](example2.png)
+
+![alt text](example3.png)
