@@ -13,6 +13,8 @@ DEFAULT_RESOLUTION = 500
 REPAINT_KEY_DIRECT = 'a'
 REPAINT_KEY_FORMAT = 'b'
 SAVE_KEY = 'c'
+DESIRED_WIDTH = 1920
+DESIRED_HEIGHT = 1080
 
 
 class AppleMan:
@@ -82,8 +84,11 @@ class AppleMan:
                 new_y_section += (ax.get_ylim()[0] / (self.y_diff / self.step) * self.y_diff + self.y_min,)
                 new_apple_man(new_x_section, new_y_section)
             elif event.key == self.repaint_key_format:
-                width = int(input('Calculate how many points in x direction? '))
-                height = int(input('Calculate how many points in y direction? '))
+                # width = int(input('Calculate how many points in x direction? '))
+                # height = int(input('Calculate how many points in y direction? '))
+                width = DESIRED_WIDTH
+                height = DESIRED_HEIGHT
+                
                 res = (width ** 2 + height ** 2) ** 0.5
                 
                 x_begin = ax.get_xlim()[0] / (self.x_diff / self.step) * self.x_diff + self.x_min
